@@ -1,0 +1,1 @@
+This project purpose is to record field events of a player or a team during football match.
