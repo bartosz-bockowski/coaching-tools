@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     @GetMapping("/")
     public String home(){
-        System.out.println(SpringVersion.getVersion());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return "main/home";
     }
 }
