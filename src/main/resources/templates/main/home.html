@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" lang="pl">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
-    <form method="post" action="/logout">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <button type="submit">logout</button>
-    </form>
-    <h1>Home</h1>
+    <div layout:fragment="content">
+        <form method="post" action="/logout">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">logout</button>
+        </form>
+        <h1 th:text="#{coachingTools}"></h1>
+    </div>
 </body>
 </html>
