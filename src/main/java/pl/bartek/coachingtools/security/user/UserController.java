@@ -27,6 +27,7 @@ public class UserController {
         Role role = new Role();
         role.setName("admin");
         roleRepository.save(role);
+        roleSet.add(role);
         User user = new User();
         user.setUsername(adminEmail);
         user.setPassword("123");

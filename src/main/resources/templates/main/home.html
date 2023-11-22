@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
-    <div layout:fragment="content">
-        <form method="post" action="/logout">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit">logout</button>
-        </form>
-        <h1 th:text="#{coachingTools}"></h1>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="mainLayout" lang="pl">
+<div layout:fragment="content">
+    <h1 th:text="#{coachingTools}"></h1>
+    <div>
+        <a class="btn btn-primary" th:text="#{statistics}"></a>
+        <span sec:authorize='hasAuthority("admin")'>
+                <a class="btn btn-primary ml-3" th:text="#{register}"></a>
+                <a class="btn btn-primary ml-3" th:text="#{adminPanel}"></a>
+            </span>
     </div>
-</body>
+</div>
 </html>
