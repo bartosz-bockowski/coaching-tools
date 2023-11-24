@@ -8,7 +8,7 @@
         <a class="btn btn-primary" th:text="#{statistics}"></a>
         <span sec:authorize='hasAuthority("admin")'>
                 <a class="btn btn-primary ml-3" th:text="#{register}"></a>
-                <a class="btn btn-primary ml-3" th:text="#{adminPanel}"></a>
+                <a th:href="@{/admin/adminPanel}" class="btn btn-primary ml-3" th:text="#{adminPanel}"></a>
             </span>
     </div>
 </div>

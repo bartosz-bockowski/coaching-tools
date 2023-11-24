@@ -8,9 +8,8 @@
   <script th:src="@{/js/bootstrap.bundle.js}"></script>
 </head>
 <body>
-  <div id="header" class="mt-1">
-    <form sec:authorize="isAuthenticated()" method="post" action="/logout">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  <div id="header" class="mt-1 w-100">
+    <form sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}">
       <button class="btn btn-danger" type="submit" th:text="#{logout}"></button>
     </form>
   </div>

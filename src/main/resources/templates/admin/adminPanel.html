@@ -2,14 +2,17 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout">
 <div layout:fragment="content">
     <h1 th:text="#{adminPanel}"></h1>
-    <div>
-        <a class="btn btn-primary mt-2" th:text="#{userList}"></a>
+    <div class="mb-2">
+        <a th:href="@{/}" class="btn btn-secondary">
+            <span class="mr-1">&#10094;</span>
+            <span th:text="#{homePage}"></span>
+        </a>
     </div>
     <div>
-        <a class="btn btn-primary mt-2" th:text="#{userList}"></a>
+        <a th:href="@{/admin/user/list}" class="btn btn-primary mt-2" th:text="#{user.list}"></a>
     </div>
     <div>
-        <a class="btn btn-primary mt-2" th:text="#{userList}"></a>
+        <a th:href="@{/admin/team/list}" class="btn btn-primary mt-2" th:text="#{team.list}"></a>
     </div>
 </div>
 </html>
