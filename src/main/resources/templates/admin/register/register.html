@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout">
 <body>
-    <h1>rejestruj</h1>
+<div layout:fragment="content">
+    <h1 th:text="#{register}"></h1>
+    <img id="football-field" class="football-field" th:src="@{/img/football_field.png}" alt="football-field"/>
+    <script th:src="@{/js/register.js}"></script>
+</div>
 </body>
 </html>

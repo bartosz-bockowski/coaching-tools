@@ -23,6 +23,7 @@ public class SecurityConfig {
                             .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("admin")
                             .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                             .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                            .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
                             .anyRequest().authenticated();
                 })
                 .formLogin((form) -> form.loginPage("/login").failureUrl("/login?error=true").permitAll())

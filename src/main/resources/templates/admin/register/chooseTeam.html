@@ -2,12 +2,15 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout">
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{team.chooseTeam}"></h1>
-    <label>
-        <select class="selectpicker" data-live-search="true">
-            <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.nameWithId}"></option>
-        </select>
-    </label>
+    <form method="post" th:action="@{/admin/register/setTeam}">
+        <h1 th:text="#{team.chooseTeam}"></h1>
+        <label>
+            <select class="selectpicker" data-live-search="true" name="teamId">
+                <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.nameWithId}"></option>
+            </select>
+        </label>
+        <button type="submit" th:text="#{save}" class="btn btn-primary"></button>
+    </form>
 </div>
 </body>
 </html>
