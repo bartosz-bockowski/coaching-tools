@@ -18,4 +18,7 @@ public class Team {
     private boolean active = true;
     @OneToMany(mappedBy = "team")
     private List<Player> players;
+    public String getNameWithId(){
+        return this.name + " (ID: " + this.id + ")";
+    }
 }
