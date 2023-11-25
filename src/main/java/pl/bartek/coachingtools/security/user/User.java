@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.envers.Audited;
+
 import org.hibernate.validator.constraints.Length;
 import pl.bartek.coachingtools.security.role.Role;
 
@@ -24,7 +24,6 @@ public class User {
     private String username;
     @Length(min = 3)
     @NotNull
-    @Audited
     private String password;
     private boolean active = true;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -2,13 +2,13 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{team.list}"></h1>
     <div class="mb-2">
         <a th:href="@{/admin/adminPanel}" class="btn btn-secondary">
             <span class="mr-1">&#10094;</span>
             <span th:text="#{adminPanel}"></span>
         </a>
     </div>
+    <h1 th:text="#{team.teamList}"></h1>
     <div class="mb-2">
         <a th:href="@{/admin/team/add}" class="btn btn-primary" th:text="#{team.addTeam}"></a>
     </div>
@@ -27,6 +27,7 @@
             <td>
                 <a class="btn btn-primary" th:href="@{/admin/team/{id}/details(id=${team.id})}" th:text="#{team.details}"></a>
                 <a class="btn btn-primary" th:href="@{/admin/team/{id}/delete(id=${team.id})}" th:text="#{team.delete}"></a>
+                <a class="btn btn-primary" th:href="@{/admin/team/{id}/edit(id=${team.id})}" th:text="#{team.edit}"></a>
             </td>
         </tr>
         </tbody>

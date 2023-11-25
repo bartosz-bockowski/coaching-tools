@@ -2,14 +2,15 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div layout:fragment="content">
-    <h1 th:text="#{team.addingTeam}"></h1>
     <div class="mb-2">
         <a th:href="@{/admin/team/list}" class="btn btn-secondary">
             <span class="mr-1">&#10094;</span>
             <span th:text="#{team.teamList}"></span>
         </a>
     </div>
+    <h1 th:text="#{team.addingTeam}"></h1>
     <form method="post" th:action="@{/admin/team/add}" th:object="${team}" class="w-25 ml-auto mr-auto">
+        <input type="hidden" th:field="*{id}"/>
         <input required="required" type="text" th:field="*{name}" class="form-control" th:placeholder="#{team.name}"/>
         <button class="btn btn-primary" th:text="#{save}"></button>
     </form>

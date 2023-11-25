@@ -17,4 +17,7 @@ public class Player {
     private int number;
     @ManyToOne
     private Team team;
+    public String getFullName(){
+        return this.firstName + " " + this.lastName;
+    }
 }

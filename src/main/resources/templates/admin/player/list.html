@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div layout:fragment="content">
+    <div class="mb-2">
+        <a th:href="@{/admin/adminPanel}" class="btn btn-secondary">
+            <span class="mr-1">&#10094;</span>
+            <span th:text="#{adminPanel}"></span>
+        </a>
+    </div>
+    <h1 th:text="#{player.playerList}"></h1>
+    <form method="get" action="" class="w-25 ml-auto mr-auto mb-1">
+        <h5 th:text="#{player.filterByTeam}"></h5>
+        <select class="form-control selectpicker" data-live-search="true" name="team">
+            <option th:each="team: ${teams}" th:selected="${param.team != null && team.id.toString().equals(param.team.get(0))}" th:value="${team.id}" th:text="${team.nameWithId}"></option>
+        </select>
+        <button class="btn btn-primary" th:text="#{filter}"></button>
+    </form>
+    <div class="mb-2">
+        <a th:href="@{/admin/player/list}" class="btn btn-secondary" th:text="#{clearFilters}"></a>
+    </div>
+    <div class="mb-2">
+        <a th:href="@{/admin/player/add}" class="btn btn-primary" th:text="#{player.addPlayer}"></a>
+    </div>
+    <table class="table table-bordered text-left table-striped ml-auto mr-auto">
+        <thead>
+        <tr>
+            <th th:text="#{player.id}" class="col-3"></th>
+            <th th:text="#{player.fullName}" class="col-3"></th>
+            <th th:text="#{player.actions}" class="col-3"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player: ${players}">
+            <td th:text="${player.id}"></td>
+            <td th:text="${player.fullName}"></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{/admin/player/{id}/details(id=${player.id})}" th:text="#{player.details}"></a>
+                <a class="btn btn-primary" th:href="@{/admin/player/{id}/delete(id=${player.id})}" th:text="#{player.delete}"></a>
+                <a class="btn btn-primary" th:href="@{/admin/player/{id}/edit(id=${player.id})}" th:text="#{player.edit}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

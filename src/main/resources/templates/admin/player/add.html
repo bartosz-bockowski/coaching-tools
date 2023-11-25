@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div layout:fragment="content">
+    <div class="mb-2">
+        <a th:href="@{/admin/player/list}" class="btn btn-secondary">
+            <span class="mr-1">&#10094;</span>
+            <span th:text="#{player.playerList}"></span>
+        </a>
+    </div>
+    <h1 th:text="#{player.addingPlayer}"></h1>
+    <form method="post" th:action="@{/admin/player/add}" th:object="${player}" class="w-25 ml-auto mr-auto">
+        <input type="hidden" th:field="*{id}"/>
+        <input required="required" type="text" th:field="*{firstName}" class="form-control" th:placeholder="#{player.firstName}"/>
+        <input required="required" type="text" th:field="*{lastName}" class="form-control" th:placeholder="#{player.lastName}"/>
+        <h5 th:text="#{team}"></h5>
+        <select required="required" class="form-control selectpicker" data-live-search="true" th:field="*{team}" th:title="#{noValue}">
+            <option th:each="team: ${teams}" th:selected="${team.id.equals(player.id)}" th:value="${team.id}" th:text="${team.nameWithId}"></option>
+        </select>
+        <h5 class="mt-2" th:text="#{player.number}"></h5>
+        <input required="required" type="number" th:field="*{number}" class="form-control" th:placeholder="#{player.number}"/>
+        <button class="btn btn-primary mt-2" th:text="#{save}"></button>
+    </form>
+</div>
+</body>
+</html>

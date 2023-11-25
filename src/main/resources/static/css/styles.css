@@ -11,3 +11,6 @@ a.dropdown-item.active{
     border: 1px solid #c7c7c7;
     border-radius: 5px;
 }
+.form-control{
+    margin-bottom: 10px;
+}
