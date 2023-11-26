@@ -12,9 +12,6 @@ import pl.bartek.coachingtools.team.Team;
 import java.time.LocalDateTime;
 
 @Entity
-@Component
-@Scope(value = WebApplicationContext.SCOPE_SESSION,
-        proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Getter
 @Setter
 public class FootballMatch {

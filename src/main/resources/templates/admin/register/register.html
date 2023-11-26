@@ -5,6 +5,7 @@
     <h1 th:text="#{register}"></h1>
     <img id="football-field" class="football-field" th:src="@{/img/football_field.png}" alt="football-field"/>
     <script th:src="@{/js/register.js}"></script>
+    <div th:each="player: ${footballMatch.team.players}" th:text="${player.fullName}"></div>
 </div>
 </body>
 </html>

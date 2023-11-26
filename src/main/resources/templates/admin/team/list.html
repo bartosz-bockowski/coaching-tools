@@ -28,6 +28,7 @@
                 <a class="btn btn-primary" th:href="@{/admin/team/{id}/details(id=${team.id})}" th:text="#{team.details}"></a>
                 <a class="btn btn-primary" th:href="@{/admin/team/{id}/delete(id=${team.id})}" th:text="#{team.delete}"></a>
                 <a class="btn btn-primary" th:href="@{/admin/team/{id}/edit(id=${team.id})}" th:text="#{team.edit}"></a>
+                <a class="btn btn-primary" th:href="@{/admin/player/add(team=${team.id})}" th:text="#{team.addPlayer}"></a>
             </td>
         </tr>
         </tbody>
