@@ -8,6 +8,8 @@
             <span th:text="#{team.teamList}"></span>
         </a>
     </div>
+    <h1 th:if="${team.id == null}" th:text="#{team.addingTeam}"></h1>
+    <h1 th:if="${team.id != null}" th:text="#{team.editingTeam}"></h1>
     <h1 th:text="#{team.addingTeam}"></h1>
     <form method="post" th:action="@{/admin/team/add}" th:object="${team}" class="w-25 ml-auto mr-auto">
         <input type="hidden" th:field="*{id}"/>
