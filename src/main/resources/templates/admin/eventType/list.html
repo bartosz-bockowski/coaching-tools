@@ -25,7 +25,10 @@
         <tr th:each="eventType: ${eventTypes}">
             <td th:text="${eventType.id}"></td>
             <td th:text="${eventType.name}"></td>
-            <td th:text="${eventType.twoPoints}"></td>
+            <td>
+                <span th:if="${eventType.twoPoints}" th:text="#{yes}"></span>
+                <span th:if="${!eventType.twoPoints}" th:text="#{no}"></span>
+            </td>
             <td>
                 <a class="btn btn-primary" th:href="@{/admin/eventType/{id}/details(id=${eventType.id})}" th:text="#{eventType.details}"></a>
                 <a class="btn btn-primary" th:href="@{/admin/eventType/{id}/delete(id=${eventType.id})}" th:text="#{eventType.delete}"></a>

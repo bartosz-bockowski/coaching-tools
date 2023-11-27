@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div layout:fragment="content">
+    <div class="mb-2">
+        <a th:href="@{/admin/eventType/list}" class="btn btn-secondary">
+            <span class="mr-1">&#10094;</span>
+            <span th:text="#{eventType.eventTypeList}"></span>
+        </a>
+    </div>
+    <h1 th:text="#{eventType.addingEventType}"></h1>
+    <form method="post" th:action="@{/admin/eventType/add}" th:object="${eventType}" class="w-25 ml-auto mr-auto">
+        <input type="hidden" th:field="*{id}"/>
+        <input required="required" type="text" th:field="*{name}" class="form-control" th:placeholder="#{eventType.name}"/>
+        <h3 th:text="#{eventType.twoPoints}"></h3>
+        <div class="d-flex align-content-center justify-content-center">
+            <label class="float-left ld-flex align-content-center justify-content-center">
+                <span th:text="#{no}"></span>
+                <input required="required" th:value="false" type="radio" th:field="*{twoPoints}" th:placeholder="#{eventType.twoPoints}"/>
+            </label>
+            <label class="ml-lg-4 float-left d-flex align-content-center justify-content-center">
+                <span th:text="#{yes}"></span>
+                <input class="ml-1" required="required" th:value="true" type="radio" th:field="*{twoPoints}" th:placeholder="#{eventType.twoPoints}"/>
+            </label>
+        </div>
+        <button class="btn btn-primary mt-2" th:text="#{save}"></button>
+    </form>
+</div>
+</body>
+</html>

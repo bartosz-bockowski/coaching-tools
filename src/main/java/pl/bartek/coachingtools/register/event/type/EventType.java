@@ -15,5 +15,5 @@ public class EventType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Boolean twoPoints;
+    private Boolean twoPoints = false;
 }
