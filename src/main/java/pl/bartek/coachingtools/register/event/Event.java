@@ -20,4 +20,8 @@ public class Event {
     private Player player;
     @ManyToOne
     private FootballMatch footballMatch;
+    private Integer X_A;
+    private Integer Y_A;
+    private Integer X_B;
+    private Integer Y_B;
 }
