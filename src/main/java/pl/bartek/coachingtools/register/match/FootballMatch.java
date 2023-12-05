@@ -3,10 +3,6 @@ package pl.bartek.coachingtools.register.match;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
 import pl.bartek.coachingtools.team.Team;
 
 import java.time.LocalDateTime;

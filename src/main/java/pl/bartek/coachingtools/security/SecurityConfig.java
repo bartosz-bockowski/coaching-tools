@@ -5,10 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CsrfAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -18,14 +16,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((auth) -> {
-                    auth
-                            .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("admin")
-                            .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
-                            .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
-                            .anyRequest().authenticated();
-                })
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority("admin")
+                        .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
+                        .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login").failureUrl("/login?error=true").permitAll())
                 .logout((logout) -> logout.logoutUrl("/logout").permitAll());
         return http.build();

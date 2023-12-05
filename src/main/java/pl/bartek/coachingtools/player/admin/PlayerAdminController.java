@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.bartek.coachingtools.player.Player;
 import pl.bartek.coachingtools.player.PlayerRepository;
-import pl.bartek.coachingtools.player.QPlayer;
 import pl.bartek.coachingtools.team.TeamRepository;
 
 @Controller
