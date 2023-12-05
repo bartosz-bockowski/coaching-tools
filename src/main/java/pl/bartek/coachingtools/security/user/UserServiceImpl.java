@@ -3,7 +3,6 @@ package pl.bartek.coachingtools.security.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.bartek.coachingtools.security.role.RoleRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +18,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActive(true);
-        userRepository.save(user);
-    }
-    public void updateUser(User user){
         user.setActive(true);
         userRepository.save(user);
     }
