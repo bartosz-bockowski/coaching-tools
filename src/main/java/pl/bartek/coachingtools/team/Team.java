@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 import pl.bartek.coachingtools.player.Player;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -23,6 +24,9 @@ public class Team {
     private boolean active = true;
     @OneToMany(mappedBy = "team")
     private List<Player> players;
+    public List<Player> getPlayers(){
+        return this.players.stream().sorted(Comparator.comparing(Player::getNumber)).toList();
+    }
     public String getNameWithId(){
         return this.name + " (ID: " + this.id + ")";
     }

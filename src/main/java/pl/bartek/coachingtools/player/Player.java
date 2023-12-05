@@ -20,4 +20,7 @@ public class Player {
     public String getFullName(){
         return this.firstName + " " + this.lastName;
     }
+    public String getFirstNameFirstLetterAndLastName(){
+        return this.firstName.charAt(0) + ". " + this.lastName;
+    }
 }
