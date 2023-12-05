@@ -28,3 +28,13 @@ a.dropdown-item.active{
 .user-select-none{
     user-select: none;
 }
+.hidden{
+    display: none;
+}
+.top-left{
+    top: 0;
+    left: 0;
+}
+.hover-pointer:hover{
+    cursor: pointer;
+}

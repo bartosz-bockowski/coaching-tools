@@ -3,21 +3,29 @@
 <body>
 <div layout:fragment="content">
     <div style="display: none;" id="football-field-div">
+        <div class="btn btn-primary position-absolute top-left change-player-button p-2 user-select-none" th:text="#{register.changePlayer}"></div>
         <h1 th:text="#{register}"></h1>
         <img id="football-field" class="football-field" th:src="@{/img/football_field.png}" alt="football-field"/>
         <script th:src="@{/js/register.js}"></script>
     </div>
     <div id="players-div">
         <h1 th:text="#{register.choosePlayer}"></h1>
-        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none" style="min-width: 200px; height: 200px;" th:each="player: ${footballMatch.team.players}">
+        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer" style="min-width: 200px; height: 200px;">
+            <h1 class="display-1 font-weight-bold" th:text="#{register.wholeTeam}"></h1>
+            <div class="hidden id">0</div>
+        </div>
+        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer" style="min-width: 200px; height: 200px;" th:each="player: ${footballMatch.team.players}">
             <h1 class="display-1 font-weight-bold" th:text="${player.number}"></h1>
             <h3 th:text="${player.firstNameFirstLetterAndLastName}"></h3>
+            <div class="hidden id" th:text="${player.id}"></div>
         </div>
     </div>
     <div style="display: none;" id="event-div">
         <h1 th:text="#{register.chooseEvent}"></h1>
-        <div class="float-left bg-danger text-white ml-3 mt-3 p-2 user-select-none" style="min-width: 200px; height: 200px;" th:each="eventType: ${eventTypes}">
+        <div class="float-left bg-danger text-white ml-3 mt-3 p-2 user-select-none register-choose-event hover-pointer" style="min-width: 200px; height: 200px;" th:each="eventType: ${eventTypes}">
             <h1 th:text="${eventType.name}"></h1>
+            <div class="hidden two-points" th:text="${eventType.twoPoints}"></div>
+            <div class="hidden id" th:text="${eventType.id}"></div>
         </div>
     </div>
 </div>
