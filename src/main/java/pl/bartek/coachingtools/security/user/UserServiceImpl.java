@@ -17,10 +17,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).isPresent() ? userRepository.findByUsername(username).get() : null;
     }
     @Override
-    public User findByRestorePasswordCode(String code){
-        return userRepository.findByRestorePasswordCode(code).isPresent() ? userRepository.findByRestorePasswordCode(code).get() : null;
-    }
-    @Override
     public void saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
