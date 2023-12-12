@@ -11,6 +11,28 @@
         </label>
         <button type="submit" th:text="#{save}" class="btn btn-primary"></button>
     </form>
+    <h1 th:text="#{register.matchesFromLastTwoDays}"></h1>
+    <table class="table table-bordered text-left table-striped ml-auto mr-auto mt-5">
+        <thead>
+        <tr>
+            <th th:text="#{footballMatch.id}"></th>
+            <th th:text="#{footballMatch.startTime}"></th>
+            <th th:text="#{footballMatch.team}"></th>
+            <th th:text="#{footballMatch.actions}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="match: ${matches}">
+            <td th:text="${match.id}"></td>
+            <td th:text="${{match.start}}"></td>
+            <td th:text="${match.team.nameWithId}"></td>
+            <td>
+                <a class="btn btn-primary" th:text="#{register.continueRegisteringMatch}"
+                   th:href="@{/admin/register/continueMatch/{id}/(id=${match.id})}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

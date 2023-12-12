@@ -35,6 +35,14 @@ a.dropdown-item.active{
     top: 0;
     left: 0;
 }
+.top-right{
+    top: 0;
+    right: 0;
+}
 .hover-pointer:hover{
     cursor: pointer;
+}
+.absolute-center{
+    top: 50%;
+    left: 50%;
 }

@@ -2,27 +2,66 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout">
 <body>
 <div layout:fragment="content">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <div th:if="${continue}" class="hidden" id="continue-div">
+        <span id="continue-matchId" th:text="${footballMatch.id}"></span>
+        <span id="continue-endTime"
+              th:text="${footballMatch.end.getHour() * 3600 + footballMatch.end.getMinute() * 60 + footballMatch.end.getSecond()}"></span>
+        <span id="continue-startTime" th:text="${footballMatch.start}"></span>
+    </div>
+    <div class="hidden" id="first-half" th:text="${footballMatch.firstHalf}"></div>
+    <div class="hidden" id="team-id" th:text="${footballMatch.team.id}"></div>
+    <div class="hidden" id="football-match-id" th:text="${footballMatch.id}"></div>
+    <div class="hidden" id="football-match-second-half-start" th:text="${footballMatch.secondHalfStart}"></div>
+    <div class="hidden" id="football-match-first-half-overtime" th:text="${footballMatch.firstHalfOvertime}"></div>
+    <div class="position-absolute top-right">
+        <a class="btn btn-primary" th:href="@{/}" th:text="#{homePage}"></a>
+        <a class="btn btn-danger" id="stop-button"
+           th:href="@{/admin/register/stop/}"
+           th:editHref="@{/admin/register/stop/}"
+           th:text="#{register.stopRegistering}"></a>
+    </div>
     <div style="display: none;" id="football-field-div">
-        <div class="btn btn-primary position-absolute top-left change-player-button p-2 user-select-none" th:text="#{register.changePlayer}"></div>
-        <h1 th:text="#{register}"></h1>
+        <div class="btn btn-primary position-absolute absolute-center start-button" th:text="#{register.start}"></div>
+        <div class="position-absolute top-left">
+            <div class="btn btn-primary change-player-button p-2 user-select-none"
+                 th:text="#{register.changePlayer}"></div>
+            <span class="ml-2" th:text="#{register.currentPlayer}"></span>
+            <span class="font-weight-bold" id="current-player"></span>
+        </div>
+        <h1 id="time">00:00</h1>
+        <div class="w-100">
+            <div class="float-left" id="left-side-div">
+                <div th:text="#{register.ourSide}"></div>
+            </div>
+            <div class="float-right" id="right-side-div">
+                <div th:text="#{register.enemySide}"></div>
+                <button class="btn btn-primary" id="switch-sides" th:text="#{register.switchSides}"></button>
+            </div>
+        </div>
         <img id="football-field" class="football-field" th:src="@{/img/football_field.png}" alt="football-field"/>
         <script th:src="@{/js/register.js}"></script>
     </div>
     <div id="players-div">
         <h1 th:text="#{register.choosePlayer}"></h1>
-        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer" style="min-width: 200px; height: 200px;">
-            <h1 class="display-1 font-weight-bold" th:text="#{register.wholeTeam}"></h1>
+        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer"
+             style="min-width: 200px; height: 200px;">
+            <span class="player-number hidden">X</span>
+            <h3 class="display-1 font-weight-bold player-name" th:text="#{register.wholeTeam}"></h3>
             <div class="hidden id">0</div>
         </div>
-        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer" style="min-width: 200px; height: 200px;" th:each="player: ${footballMatch.team.players}">
-            <h1 class="display-1 font-weight-bold" th:text="${player.number}"></h1>
-            <h3 th:text="${player.firstNameFirstLetterAndLastName}"></h3>
+        <div class="float-left bg-primary text-white ml-3 mt-3 p-2 user-select-none register-choose-player hover-pointer"
+             style="min-width: 200px; height: 200px;" th:each="player: ${footballMatch.team.players}">
+            <h1 class="display-1 font-weight-bold player-number" th:text="${player.number}"></h1>
+            <h3 class="player-name" th:text="${player.firstNameFirstLetterAndLastName}"></h3>
             <div class="hidden id" th:text="${player.id}"></div>
         </div>
     </div>
     <div style="display: none;" id="event-div">
         <h1 th:text="#{register.chooseEvent}"></h1>
-        <div class="float-left bg-danger text-white ml-3 mt-3 p-2 user-select-none register-choose-event hover-pointer" style="min-width: 200px; height: 200px;" th:each="eventType: ${eventTypes}">
+        <div class="float-left bg-danger text-white ml-3 mt-3 p-2 user-select-none register-choose-event hover-pointer"
+             style="min-width: 200px; height: 200px;" th:each="eventType: ${eventTypes}">
             <h1 th:text="${eventType.name}"></h1>
             <div class="hidden two-points" th:text="${eventType.twoPoints}"></div>
             <div class="hidden id" th:text="${eventType.id}"></div>
