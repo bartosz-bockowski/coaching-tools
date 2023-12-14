@@ -21,6 +21,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/css/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/js/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/img/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/user/createAdmin")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form.loginPage("/login").failureUrl("/login?error=true").permitAll())
                 .logout((logout) -> logout.logoutUrl("/logout").permitAll());

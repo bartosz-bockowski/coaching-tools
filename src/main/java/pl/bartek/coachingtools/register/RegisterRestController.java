@@ -12,9 +12,8 @@ import pl.bartek.coachingtools.register.event.type.EventTypeRepository;
 import pl.bartek.coachingtools.register.match.FootballMatch;
 import pl.bartek.coachingtools.register.match.FootballMatchRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,11 +30,13 @@ public class RegisterRestController {
 
     private final EventRepository eventRepository;
 
-    @PostMapping("/startMatch/{timestamp}/{teamId}")
-    public ResponseEntity<Long> startMatch(@PathVariable Long timestamp, @PathVariable Long teamId) {
-        return new ResponseEntity<>(registerService.createAndSaveFromTimeAndTeamId(Instant.ofEpochMilli(timestamp)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime(), teamId).getId(), HttpStatus.OK);
+    @PostMapping("/startMatch/{teamId}")
+    public ResponseEntity startMatch(@PathVariable Long teamId) {
+        LocalDateTime time = LocalDateTime.now();
+        return new ResponseEntity<>(List.of(
+                registerService.createAndSaveFromTimeAndTeamId(time, teamId).getId(),
+                time
+        ), HttpStatus.OK);
     }
 
     @PostMapping(value = "/saveEvent")
@@ -58,6 +59,20 @@ public class RegisterRestController {
     public void setSecondHalfStart(@PathVariable Long matchId) {
         FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
         footballMatch.setSecondHalfStart(LocalDateTime.now());
+    }
+
+    @GetMapping("/continueMatch/{matchId}")
+    public ResponseEntity continueMatch(@PathVariable Long matchId) {
+        FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
+        return new ResponseEntity<>(footballMatch.getStart(), HttpStatus.OK);
+    }
+
+    @GetMapping("/startSecondHalf/{matchId}")
+    public HttpStatus startSecondHalf(@PathVariable Long matchId) {
+        FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
+        footballMatch.setSecondHalfStart(LocalDateTime.now());
+        footballMatchRepository.save(footballMatch);
+        return HttpStatus.OK;
     }
 
 }

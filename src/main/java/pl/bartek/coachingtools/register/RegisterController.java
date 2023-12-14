@@ -11,9 +11,7 @@ import pl.bartek.coachingtools.register.match.FootballMatch;
 import pl.bartek.coachingtools.register.match.FootballMatchRepository;
 import pl.bartek.coachingtools.team.TeamRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Controller
 @RequestMapping("/admin/register")
@@ -31,7 +29,7 @@ public class RegisterController {
         HttpSession session = request.getSession();
         FootballMatch footballMatch = new FootballMatch();
         Long teamId = (Long) session.getAttribute("teamId");
-        if (teamId == null && footballMatch.getTeam() == null) {
+        if (teamId == null) {
             model.addAttribute("teams", teamRepository.findAllByActiveTrue());
             model.addAttribute("matches", footballMatchRepository.findAllByStartAfterOrderByStartDesc(LocalDateTime.now().minusDays(2)));
             return "admin/register/chooseTeam";
@@ -55,21 +53,12 @@ public class RegisterController {
                        @PathVariable int time,
                        @PathVariable boolean endHalf,
                        HttpServletRequest request) {
-        FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
         if (endHalf) {
-            if (footballMatch.isFirstHalf()) {
-                footballMatch.setFirstHalf(false);
-                footballMatch.setFirstHalfOvertime(time - 45 * 60);
-            } else {
-                footballMatch.setSecondHalfOvertime(time - 90 * 60);
-                footballMatch.setFinished(true);
-            }
+            FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
+            footballMatch.setFirstHalfDuration(time);
+            footballMatch.setFirstHalf(false);
+            footballMatchRepository.save(footballMatch);
         }
-        footballMatch.setEnd(Instant.ofEpochSecond(time)
-                .atZone(ZoneId.systemDefault())
-                .toLocalTime()
-                .minusHours(1));
-        footballMatchRepository.save(footballMatch);
         request.getSession().removeAttribute("teamId");
         return "redirect:/";
     }
