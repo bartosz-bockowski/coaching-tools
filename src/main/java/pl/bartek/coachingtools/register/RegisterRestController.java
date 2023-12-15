@@ -14,6 +14,7 @@ import pl.bartek.coachingtools.register.match.FootballMatchRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,7 +65,19 @@ public class RegisterRestController {
     @GetMapping("/continueMatch/{matchId}")
     public ResponseEntity continueMatch(@PathVariable Long matchId) {
         FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
-        return new ResponseEntity<>(footballMatch.getStart(), HttpStatus.OK);
+        LocalDateTime result;
+        if (footballMatch.isFirstHalf()) {
+            result = footballMatch.getStart();
+        } else {
+            if (Objects.isNull(footballMatch.getSecondHalfStart())) {
+                result = LocalDateTime.now();
+                footballMatch.setSecondHalfStart(result);
+                footballMatchRepository.save(footballMatch);
+            } else {
+                result = footballMatch.getSecondHalfStart();
+            }
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/startSecondHalf/{matchId}")

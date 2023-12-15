@@ -6,46 +6,47 @@ let firstHalf
 let startTime
 let secondHalfStartTime
 
+let choosenEventId
+let eventTime
+let settingSecondPoint
+let eventCommand
+let x1, y1
+
 let csrfHeader
 let csrfToken
 
 let headers = new Headers()
 let jsonHeaders = new Headers()
 
-function fetchFun(link, method, headers, body) {
-    fetch(link, {
-        method: method,
-        headers: headers,
-        body: body
-    })
-        .then(res => res.json())
-        .then(res => {
-            return res
-        })
-    return null
-}
-
 function fetchContinueMatch() {
     fetch("/admin/register/api/continueMatch/" + matchId)
         .then(res => res.json())
         .then(res => {
             startTime = new Date(res)
+            console.log(res)
             setInterval(() => {
                 if (firstHalf) {
                     $("#time").text(Math.floor((new Date() - startTime) / 1000))
                 } else {
-                    $("#time").text(Math.floor((new Date() - new Date(secondHalfStartTime)) / 1000))
+                    $("#time").text(Math.floor((new Date() - new Date(startTime)) / 1000))
                 }
             }, 1000)
         })
+}
+
+function fetchEventCommand() {
+    console.log(eventCommand)
 }
 
 function isContinuation() {
     return $("#continue-div").length
 }
 
-$(document).ready(() => {
-    //setup
+function getTime() {
+    return $("#time").text()
+}
+
+function setup() {
     csrfHeader = $("#_csrf_header").text()
     csrfToken = $("#_csrf_token").text()
 
@@ -61,12 +62,16 @@ $(document).ready(() => {
 
     secondHalfStartTime = $("#football-match-second-half-start").text()
 
-    if (matchId !== null) {
+    console.log(secondHalfStartTime)
+    if (matchId !== null && (secondHalfStartTime !== "" || firstHalf)) {
         fetchContinueMatch()
     }
+}
 
+$(document).ready(() => {
 
-    //end of setup
+    setup()
+
     $(".register-choose-player").click((e) => {
         playerId = $(e.currentTarget).find(".id").text()
         $("#players-div").hide()
@@ -76,6 +81,23 @@ $(document).ready(() => {
         if (!confirm("czy na pewno?")) {
             return
         }
+        let footballField = $("#football-field")
+        footballField.click((e) => {
+            eventTime = getTime()
+            let width = footballField.innerWidth()
+            let height = footballField.innerHeight()
+            x1 = Math.floor(e.offsetX / width * 100)
+            y1 = Math.floor(e.offsetY / height * 100)
+            if (settingSecondPoint) {
+                eventCommand.x2 = x1
+                eventCommand.y2 = y1
+                fetchEventCommand()
+                settingSecondPoint = false
+                return
+            }
+            $("#football-field-div").hide()
+            $("#event-div").show()
+        })
         $(".start-button").hide()
         if (isContinuation()) {
             if (!firstHalf) {
@@ -83,14 +105,6 @@ $(document).ready(() => {
                     headers: headers
                 })
             }
-            // if (!firstHalf) {
-            //     secondHalfStartTime = new Date()
-            //     //save second half start time
-            //     setInterval(() => {
-            //         let time = new Date() - secondHalfStartTime
-            //         $("#time").text(Math.floor(time / 1000) + 45 * 60)
-            //     }, 1000)
-            // }
             fetchContinueMatch()
             return
         }
@@ -99,10 +113,8 @@ $(document).ready(() => {
             headers: headers
         }).then(res => res.json())
             .then(res => {
-                $("#football-match-id").text(res[0])
+                matchId = res[0]
                 startTime = new Date(res[1])
-                console.log(startTime)
-                //add onclick on football field
                 setInterval(() => {
                     $("#time").text(Math.floor((new Date() - startTime) / 1000))
                 }, 1000)
@@ -114,6 +126,26 @@ $(document).ready(() => {
         if (!confirm("czy na pewno?")) {
             return
         }
-        window.location.href = $(e.currentTarget).attr("href") + (matchId === null ? 0 : matchId) + "/" + $("#time").text() + "/" + (parseInt($("#time").text()) > 60 * 45 && firstHalf && confirm("czy chcesz zakonczyc polowe"))
+        window.location.href = $(e.currentTarget).attr("href") + (matchId === null ? 0 : matchId) + "/" + getTime() + "/" + (parseInt(getTime()) >= 60 * 45 && firstHalf && confirm("czy chcesz zakonczyc polowe"))
+    })
+    $(".register-choose-event").click((e) => {
+        let target = $(e.currentTarget)
+        choosenEventId = target.find(".id").text()
+        let twoPoints = target.find(".two-points").text() === "true"
+        eventCommand = {
+            "time": eventTime,
+            "playerId": playerId,
+            "matchId": matchId,
+            "eventTypeId": choosenEventId,
+            "firstHalf": firstHalf,
+            "x1": x1,
+            "y1": y1
+        }
+        settingSecondPoint = twoPoints
+        if (!settingSecondPoint) {
+            fetchEventCommand()
+        }
+        $("#event-div").hide()
+        $("#football-field-div").show()
     })
 })
