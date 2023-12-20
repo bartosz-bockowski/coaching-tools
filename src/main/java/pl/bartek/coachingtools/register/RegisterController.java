@@ -31,7 +31,7 @@ public class RegisterController {
         Long teamId = (Long) session.getAttribute("teamId");
         if (teamId == null) {
             model.addAttribute("teams", teamRepository.findAllByActiveTrue());
-            model.addAttribute("matches", footballMatchRepository.findAllByStartAfterOrderByStartDesc(LocalDateTime.now().minusDays(2)));
+            model.addAttribute("matches", footballMatchRepository.findAllByFinishedFalseAndStartAfterOrderByStartDesc(LocalDateTime.now().minusDays(2)));
             return "admin/register/chooseTeam";
         }
         if (footballMatch.getTeam() == null) {
@@ -48,15 +48,17 @@ public class RegisterController {
         return "redirect:/admin/register";
     }
 
-    @GetMapping("/stop/{matchId}/{time}/{endHalf}")
+    @GetMapping("/stop/{matchId}/{time}/{endHalf}/{firstHalf}")
     public String stop(@PathVariable Long matchId,
                        @PathVariable int time,
                        @PathVariable boolean endHalf,
+                       @PathVariable boolean firstHalf,
                        HttpServletRequest request) {
         if (endHalf) {
             FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
             footballMatch.setFirstHalfDuration(time);
             footballMatch.setFirstHalf(false);
+            footballMatch.setFinished(!firstHalf);
             footballMatchRepository.save(footballMatch);
         }
         request.getSession().removeAttribute("teamId");

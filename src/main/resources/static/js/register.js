@@ -23,19 +23,43 @@ function fetchContinueMatch() {
         .then(res => res.json())
         .then(res => {
             startTime = new Date(res)
-            console.log(res)
             setInterval(() => {
                 if (firstHalf) {
-                    $("#time").text(Math.floor((new Date() - startTime) / 1000))
+                    setTime(Math.floor((new Date() - startTime) / 1000))
                 } else {
-                    $("#time").text(Math.floor((new Date() - new Date(startTime)) / 1000))
+                    setTime(Math.floor((new Date() - new Date(startTime)) / 1000))
                 }
             }, 1000)
         })
 }
 
+function getTimeFromSeconds(secondsTime) {
+    let minutes = Math.floor(secondsTime / 60)
+    if (minutes < 10) minutes = "0" + minutes
+    let seconds = secondsTime - minutes * 60
+    if (seconds < 10) seconds = "0" + seconds
+    return minutes + ":" + seconds
+}
+
+function setTime(time) {
+    let timeToSet = time
+    let added = ""
+    if (time > 2700) {
+        added = " (+" + getTimeFromSeconds(time - 2700) + ")"
+        timeToSet = 2700
+    }
+    $("#hiddenTime").text(time)
+    if (!firstHalf) timeToSet += 45 * 60
+    time = getTimeFromSeconds(timeToSet) + added
+    $("#time").text(time)
+}
+
 function fetchEventCommand() {
-    console.log(eventCommand)
+    fetch("/admin/register/api/saveEvent", {
+        method: "POST",
+        headers: jsonHeaders,
+        body: JSON.stringify(eventCommand)
+    })
 }
 
 function isContinuation() {
@@ -43,7 +67,7 @@ function isContinuation() {
 }
 
 function getTime() {
-    return $("#time").text()
+    return $("#hiddenTime").text()
 }
 
 function setup() {
@@ -62,7 +86,6 @@ function setup() {
 
     secondHalfStartTime = $("#football-match-second-half-start").text()
 
-    console.log(secondHalfStartTime)
     if (matchId !== null && (secondHalfStartTime !== "" || firstHalf)) {
         fetchContinueMatch()
     }
@@ -116,7 +139,7 @@ $(document).ready(() => {
                 matchId = res[0]
                 startTime = new Date(res[1])
                 setInterval(() => {
-                    $("#time").text(Math.floor((new Date() - startTime) / 1000))
+                    setTime(Math.floor((new Date() - startTime) / 1000))
                 }, 1000)
             })
 
@@ -126,7 +149,7 @@ $(document).ready(() => {
         if (!confirm("czy na pewno?")) {
             return
         }
-        window.location.href = $(e.currentTarget).attr("href") + (matchId === null ? 0 : matchId) + "/" + getTime() + "/" + (parseInt(getTime()) >= 60 * 45 && firstHalf && confirm("czy chcesz zakonczyc polowe"))
+        window.location.href = $(e.currentTarget).attr("href") + (matchId === null ? 0 : matchId) + "/" + getTime() + "/" + (parseInt(getTime()) >= 60 * 45 && confirm("czy chcesz zakonczyc " + (firstHalf ? "polowe" : "mecz") + "?")) + "/" + firstHalf
     })
     $(".register-choose-event").click((e) => {
         let target = $(e.currentTarget)

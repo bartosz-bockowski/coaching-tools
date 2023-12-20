@@ -83,8 +83,10 @@ public class RegisterRestController {
     @GetMapping("/startSecondHalf/{matchId}")
     public HttpStatus startSecondHalf(@PathVariable Long matchId) {
         FootballMatch footballMatch = footballMatchRepository.getReferenceById(matchId);
-        footballMatch.setSecondHalfStart(LocalDateTime.now());
-        footballMatchRepository.save(footballMatch);
+        if (Objects.isNull(footballMatch.getSecondHalfStart())) {
+            footballMatch.setSecondHalfStart(LocalDateTime.now());
+            footballMatchRepository.save(footballMatch);
+        }
         return HttpStatus.OK;
     }
 
