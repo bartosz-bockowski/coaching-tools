@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="mainLayout" lang="pl">
+<div layout:fragment="content">
+    <h1 th:text="#{statistics}"></h1>
+    <h3 th:text="#{statistic.playerList}"></h3>
+    <div th:each="player: ${team.players}">
+        <a class="btn btn-primary mb-3" th:href="@{/statistic/player/{id}(id=${player.id})}"
+           th:text="${player.firstNameFirstLetterAndLastName + ' - ' + player.number}"></a>
+    </div>
+</div>
+</html>

@@ -13,9 +13,9 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(){
-        if(!userDetails.isAdmin()){
-            return "statistics";
+    public String home() {
+        if (!userDetails.isAdmin()) {
+            return "redirect:/statistic/home";
         }
         return "main/home";
     }
