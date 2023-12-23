@@ -27,9 +27,9 @@ public class FootballMatch {
 
     private boolean finished = false;
 
-    private int firstHalfOvertime;
+    private int firstHalfDuration;
 
-    private int secondHalfOvertime;
+    private int secondHalfDuration;
 
     @ManyToOne
     private Team team;

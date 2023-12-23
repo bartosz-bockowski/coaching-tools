@@ -2,24 +2,24 @@
 <html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout">
 <body>
 <div layout:fragment="content">
-    <meta th:name="_csrf" th:content="${_csrf.token}"/>
-    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <div class="hidden" id="_csrf_token" th:text="${_csrf.token}"></div>
+    <div class="hidden" id="_csrf_header" th:text="${_csrf.headerName}"></div>
     <div th:if="${continue}" class="hidden" id="continue-div">
         <span id="continue-matchId" th:text="${footballMatch.id}"></span>
-        <span id="continue-endTime"
-              th:text="${footballMatch.end.getHour() * 3600 + footballMatch.end.getMinute() * 60 + footballMatch.end.getSecond()}"></span>
+        <!--        <span id="continue-endTime"-->
+        <!--              th:text="${footballMatch.end.getHour() * 3600 + footballMatch.end.getMinute() * 60 + footballMatch.end.getSecond()}"></span>-->
         <span id="continue-startTime" th:text="${footballMatch.start}"></span>
     </div>
     <div class="hidden" id="first-half" th:text="${footballMatch.firstHalf}"></div>
     <div class="hidden" id="team-id" th:text="${footballMatch.team.id}"></div>
     <div class="hidden" id="football-match-id" th:text="${footballMatch.id}"></div>
     <div class="hidden" id="football-match-second-half-start" th:text="${footballMatch.secondHalfStart}"></div>
-    <div class="hidden" id="football-match-first-half-overtime" th:text="${footballMatch.firstHalfOvertime}"></div>
+    <div class="hidden" id="football-match-first-half-duration" th:text="${footballMatch.firstHalfDuration}"></div>
+    <!--    <div class="hidden" id="football-match-first-half-overtime" th:text="${footballMatch.firstHalfOvertime}"></div>-->
     <div class="position-absolute top-right">
         <a class="btn btn-primary" th:href="@{/}" th:text="#{homePage}"></a>
         <a class="btn btn-danger" id="stop-button"
            th:href="@{/admin/register/stop/}"
-           th:editHref="@{/admin/register/stop/}"
            th:text="#{register.stopRegistering}"></a>
     </div>
     <div style="display: none;" id="football-field-div">
@@ -30,7 +30,8 @@
             <span class="ml-2" th:text="#{register.currentPlayer}"></span>
             <span class="font-weight-bold" id="current-player"></span>
         </div>
-        <h1 id="time">00:00</h1>
+        <h1 id="time">0</h1>
+        <div class="hidden" id="hiddenTime">0</div>
         <div class="w-100">
             <div class="float-left" id="left-side-div">
                 <div th:text="#{register.ourSide}"></div>

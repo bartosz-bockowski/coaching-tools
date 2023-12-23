@@ -1,176 +1,184 @@
 let playerId
-let x
-let y
-let settingSecondPoint
-let eventTypeId
-let pause = true
-let startTime
-let matchId = 0
-let endTime = null
-let firstHalf
+let teamId
+let matchId
 
 let ourLeft = true
 
-let csrfToken
+let firstHalf
+let startTime
+let secondHalfStartTime
+
+let choosenEventId
+let eventTime
+let settingSecondPoint
+let eventCommand
+let x1, y1
+
 let csrfHeader
+let csrfToken
 
 let headers = new Headers()
 let jsonHeaders = new Headers()
 
-function getTimeInSeconds() {
-    return Math.floor((new Date() - startTime) / 1000)
-}
-
-function createEventAndFetch(playerId, matchId, time, eventTypeId, x1, y1, x2, y2) {
-    let event = {
-        "playerId": Number(playerId),
-        "matchId": matchId,
-        "time": time,
-        "eventTypeId": eventTypeId,
-        "firstHalf": firstHalf,
-        "x1": ourLeft ? x1 : 100 - x1,
-        "y1": ourLeft ? y1 : 100 - y1,
-        "x2": ourLeft ? x2 : 100 - x2,
-        "y2": ourLeft ? y2 : 100 - y2
-    }
-    fetch("/admin/register/api/saveEvent", {
-        method: "POST",
-        headers: jsonHeaders,
-        body: JSON.stringify(event)
-    }).then(res => res.json())
+function fetchContinueMatch() {
+    fetch("/admin/register/api/continueMatch/" + matchId)
+        .then(res => res.json())
         .then(res => {
-            if (res === "OK") {
-                alert("ok")
-            } else {
-                alert("error")
-            }
+            startTime = new Date(res)
+            setInterval(() => {
+                if (firstHalf) {
+                    setTime(Math.floor((new Date() - startTime) / 1000))
+                } else {
+                    setTime(Math.floor((new Date() - new Date(startTime)) / 1000))
+                }
+            }, 1000)
         })
 }
 
-$(document).ready(() => {
-    firstHalf = $("#first-half").text() === "true"
-    let contDiv = $("#continue-div")
-    if (contDiv.length > 0) {
-        matchId = $("#continue-matchId").text()
-        endTime = $("#continue-endTime").text()
-    } else {
-        startTime = null
-        endTime = 0
-    }
+function getTimeFromSeconds(secondsTime) {
+    let minutes = Math.floor(secondsTime / 60)
+    if (minutes < 10) minutes = "0" + minutes
+    let seconds = secondsTime - minutes * 60
+    if (seconds < 10) seconds = "0" + seconds
+    return minutes + ":" + seconds
+}
 
-    csrfToken = $("meta[name='_csrf']").attr("content");
-    csrfHeader = $("meta[name='_csrf_header']").attr("content");
+function setTime(time) {
+    let timeToSet = time
+    let added = ""
+    if (time > 2700) {
+        added = " (+" + getTimeFromSeconds(time - 2700) + ")"
+        timeToSet = 2700
+    }
+    $("#hiddenTime").text(time)
+    if (!firstHalf) timeToSet += 45 * 60
+    time = getTimeFromSeconds(timeToSet) + added
+    $("#time").text(time)
+}
+
+function fetchEventCommand() {
+    fetch("/admin/register/api/saveEvent", {
+        method: "POST",
+        headers: jsonHeaders,
+        body: JSON.stringify(eventCommand)
+    })
+}
+
+function isContinuation() {
+    return $("#continue-div").length
+}
+
+function getTime() {
+    return $("#hiddenTime").text()
+}
+
+function setup() {
+    csrfHeader = $("#_csrf_header").text()
+    csrfToken = $("#_csrf_token").text()
 
     headers.append(csrfHeader, csrfToken)
     jsonHeaders.append(csrfHeader, csrfToken)
     jsonHeaders.append("Content-Type", "application/json")
 
-    matchId = $("#football-match-id").text()
-    $("#football-field").click((e) => {
-        if (pause) return
-        let target = e.target
-        let x2 = Math.floor(e.offsetX / target.width * 100)
-        let y2 = Math.floor(e.offsetY / target.height * 100)
-        if (settingSecondPoint) {
-            settingSecondPoint = false
+    firstHalf = $("#first-half").text() === "true"
+    teamId = $("#team-id").text()
 
-            //save
-            createEventAndFetch(playerId, matchId, getTimeInSeconds(), eventTypeId, x, y, x2, y2)
-            console.log("saving")
-            console.log("player " + playerId)
-            console.log("event " + eventTypeId)
-            console.log("x " + x)
-            console.log("y " + y)
-            console.log("x2 " + x2)
-            console.log("y2 " + y2)
-        } else {
-            x = x2
-            y = y2
+    matchId = $("#football-match-id").text()
+    matchId = matchId === "" ? null : matchId
+
+    secondHalfStartTime = $("#football-match-second-half-start").text()
+
+    if (matchId !== null && (secondHalfStartTime !== "" || firstHalf)) {
+        fetchContinueMatch()
+    }
+}
+
+$(document).ready(() => {
+
+    setup()
+
+    $(".register-choose-player").click((e) => {
+        playerId = $(e.currentTarget).find(".id").text()
+        $("#players-div").hide()
+        $("#football-field-div").show()
+    })
+    $(".start-button").click(() => {
+        if (!confirm("czy na pewno?")) {
+            return
+        }
+        let footballField = $("#football-field")
+        footballField.click((e) => {
+            eventTime = getTime()
+            let width = footballField.innerWidth()
+            let height = footballField.innerHeight()
+            x1 = Math.floor(e.offsetX / width * 100)
+            y1 = Math.floor(e.offsetY / height * 100)
+            if (settingSecondPoint) {
+                eventCommand.x2 = ourLeft ? x1 : (100 - x1)
+                eventCommand.y2 = ourLeft ? y1 : (100 - y1)
+                fetchEventCommand()
+                settingSecondPoint = false
+                return
+            }
             $("#football-field-div").hide()
             $("#event-div").show()
+        })
+        $(".start-button").hide()
+        if (isContinuation()) {
+            if (!firstHalf) {
+                fetch("/admin/register/api/startSecondHalf/" + matchId, {
+                    headers: headers
+                })
+            }
+            fetchContinueMatch()
+            return
         }
-    })
+        fetch("/admin/register/api/startMatch/" + teamId, {
+            method: "POST",
+            headers: headers
+        }).then(res => res.json())
+            .then(res => {
+                matchId = res[0]
+                startTime = new Date(res[1])
+                setInterval(() => {
+                    setTime(Math.floor((new Date() - startTime) / 1000))
+                }, 1000)
+            })
 
+    })
+    $("#stop-button").click((e) => {
+        e.preventDefault()
+        if (!confirm("czy na pewno?")) {
+            return
+        }
+        window.location.href = $(e.currentTarget).attr("href") + (matchId === null ? 0 : matchId) + "/" + getTime() + "/" + (parseInt(getTime()) >= 60 * 45 && confirm("czy chcesz zakonczyc " + (firstHalf ? "polowe" : "mecz") + "?")) + "/" + firstHalf
+    })
     $(".register-choose-event").click((e) => {
         let target = $(e.currentTarget)
-        let twoPoints = target.find(".two-points").text()
-        eventTypeId = target.find(".id").text()
-        twoPoints = twoPoints === "true"
-        if (twoPoints) {
-            settingSecondPoint = true
-        } else {
-            //save
-            console.log("saving\nplayer " + playerId + "\nevent " + eventTypeId + "\nx " + x + "\ny " + y)
-            createEventAndFetch(playerId, matchId, getTimeInSeconds(), eventTypeId, x, y, null, null)
+        choosenEventId = target.find(".id").text()
+        let twoPoints = target.find(".two-points").text() === "true"
+        eventCommand = {
+            "time": eventTime,
+            "playerId": playerId,
+            "matchId": matchId,
+            "eventTypeId": choosenEventId,
+            "firstHalf": firstHalf,
+            "x1": ourLeft ? x1 : (100 - x1),
+            "y1": ourLeft ? y1 : (100 - y1)
+        }
+        settingSecondPoint = twoPoints
+        if (!settingSecondPoint) {
+            fetchEventCommand()
         }
         $("#event-div").hide()
         $("#football-field-div").show()
     })
 
-    $(".register-choose-player").click((e) => {
-        let target = $(e.currentTarget)
-        playerId = target.find(".id").text()
-        $("#players-div").hide()
-        $("#football-field-div").show()
-        let number = target.find(".player-number").text()
-        let name = target.find(".player-name").text()
-        $("#current-player").text((number !== "X" ? number + " - " : "") + name)
-    })
-
-    $(".change-player-button").click(() => {
-        $("#football-field-div").hide()
-        $("#players-div").show()
-    })
-
-    $(".start-button").click((e) => {
-        pause = false
-        if (startTime == null)
-            $(e.currentTarget).hide()
-        console.log(endTime)
-        startTime = new Date(new Date() - endTime * 1000)
-        if (!$("#continue-div").length) {
-            fetch("/admin/register/api/startMatch/" + startTime.getTime() + "/" + $("#team-id").text(),
-                {
-                    method: "POST",
-                    headers: headers
-                })
-                .then((res) => res.json())
-                .then((res) => {
-                    matchId = res
-                })
-        }
-        if ($("#continue-div").length && $("#football-match-second-half-start").text() === "") {
-            fetch("/admin/register/api/setSecondHalfStart/" + $("#football-match-id").text())
-        }
-        setInterval(() => {
-            let time = Math.floor((new Date() - startTime) / 1000) - (!firstHalf ? $("#football-match-first-half-overtime").text() : 0)
-            let seconds = time % 60
-            let minutes = (time - seconds) / 60
-            if (seconds < 10) seconds = "0" + seconds
-            if (minutes < 10) minutes = "0" + minutes
-            $("#time").text(minutes + ":" + seconds + (firstHalf ? (minutes > 44 ? " - doliczony" : "") : minutes > 89 ? " - doliczony" : ""))
-            let stopBtn = $("#stop-button")
-            stopBtn.attr("href", stopBtn.attr("editHref") + matchId + "/" + time)
-        }, 1000)
-    })
-
-    $("#stop-button").click((e) => {
-        e.preventDefault()
-        let endHalf = false
-        if ((firstHalf && confirm("czy chcesz zakonczyc polowe")) || (!firstHalf && confirm("czy chcesz zakonczyc mecz"))) {
-            endHalf = true
-        }
-        if (confirm("czy na pewno?")) {
-            window.location.href = $(e.currentTarget).attr("href") + "/" + endHalf
-        }
-    })
-
     $("#switch-sides").click(() => {
-        let left = $("#left-side-div").find("div")
-        let right = $("#right-side-div").find("div")
-        let temp = left.html()
-        left.html(right.html())
-        right.html(temp)
         ourLeft = !ourLeft
+        let leftSideDivContent = $("#left-side-div").find("div").text()
+        $("#left-side-div").find("div").html($("#right-side-div").find("div").html())
+        $("#right-side-div").find("div").html(leftSideDivContent)
     })
+
 })

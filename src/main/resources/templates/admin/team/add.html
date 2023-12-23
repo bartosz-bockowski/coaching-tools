@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="mainLayout"
+      xmlns:th="http://www.thymeleaf.org">
 <body>
 <div layout:fragment="content">
     <div class="mb-2">
@@ -10,7 +11,6 @@
     </div>
     <h1 th:if="${team.id == null}" th:text="#{team.addingTeam}"></h1>
     <h1 th:if="${team.id != null}" th:text="#{team.editingTeam}"></h1>
-    <h1 th:text="#{team.addingTeam}"></h1>
     <form method="post" th:action="@{/admin/team/add}" th:object="${team}" class="w-25 ml-auto mr-auto">
         <input type="hidden" th:field="*{id}"/>
         <input required="required" type="text" th:field="*{name}" class="form-control" th:placeholder="#{team.name}"/>
