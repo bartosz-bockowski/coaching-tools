@@ -2,6 +2,8 @@ let playerId
 let teamId
 let matchId
 
+let ourLeft = true
+
 let firstHalf
 let startTime
 let secondHalfStartTime
@@ -112,8 +114,8 @@ $(document).ready(() => {
             x1 = Math.floor(e.offsetX / width * 100)
             y1 = Math.floor(e.offsetY / height * 100)
             if (settingSecondPoint) {
-                eventCommand.x2 = x1
-                eventCommand.y2 = y1
+                eventCommand.x2 = ourLeft ? x1 : (100 - x1)
+                eventCommand.y2 = ourLeft ? y1 : (100 - y1)
                 fetchEventCommand()
                 settingSecondPoint = false
                 return
@@ -161,8 +163,8 @@ $(document).ready(() => {
             "matchId": matchId,
             "eventTypeId": choosenEventId,
             "firstHalf": firstHalf,
-            "x1": x1,
-            "y1": y1
+            "x1": ourLeft ? x1 : (100 - x1),
+            "y1": ourLeft ? y1 : (100 - y1)
         }
         settingSecondPoint = twoPoints
         if (!settingSecondPoint) {
@@ -171,4 +173,12 @@ $(document).ready(() => {
         $("#event-div").hide()
         $("#football-field-div").show()
     })
+
+    $("#switch-sides").click(() => {
+        ourLeft = !ourLeft
+        let leftSideDivContent = $("#left-side-div").find("div").text()
+        $("#left-side-div").find("div").html($("#right-side-div").find("div").html())
+        $("#right-side-div").find("div").html(leftSideDivContent)
+    })
+
 })
